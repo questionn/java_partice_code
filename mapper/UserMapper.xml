@@ -1,0 +1,39 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tom.mapper.UserMapper">
+    <!--抽取-->
+    <sql id="mySQL">
+        <if test="sex != null">
+            and sex = #{sex}
+        </if>
+        <if test="username != null">
+            and username like '%${username}%'
+        </if>
+    </sql>
+    
+    <select id="queryUserByCount" parameterType="com.tom.po.User" resultType="int">
+
+        SELECT
+            COUNT(*)
+        FROM
+            `user`
+        <where>
+            <include refid="mySQL"/>
+        </where>
+    </select>
+
+    <resultMap id="myResultMap" type="com.tom.po.User">
+        <id column="id" property="id"/>
+        <result column="Myname" property="username"/>
+        <result column="Mysex" property="sex"/>
+        <result column="Myaddress" property="address"/>
+    </resultMap>
+
+    <select id="queryUserByAlias" resultMap="myResultMap">
+        SELECT
+            username Myname, sex Mysex, address Myaddress
+        FROM
+            `user`
+    </select>
+</mapper>
